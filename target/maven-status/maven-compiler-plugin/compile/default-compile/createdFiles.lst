@@ -1,0 +1,8 @@
+orange\acdc\mongodb\quotaenforcer\model\Log.class
+orange\acdc\mongodb\quotaenforcer\controllers\CoreController.class
+orange\acdc\mongodb\quotaenforcer\QuotaEnforcerApplication.class
+orange\acdc\mongodb\quotaenforcer\configuration\SecurityConfig.class
+orange\acdc\mongodb\quotaenforcer\controllers\HttpController.class
+orange\acdc\mongodb\quotaenforcer\controllers\QuotaEnforcer.class
+orange\acdc\mongodb\quotaenforcer\model\User.class
+orange\acdc\mongodb\quotaenforcer\model\Database.class

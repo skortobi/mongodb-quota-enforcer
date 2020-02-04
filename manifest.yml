@@ -1,0 +1,7 @@
+---
+applications:
+  - name: mongodb-quotaenforcer
+    buildpack: java_buildpack
+    path: target/quota-enforcer-0.0.1-SNAPSHOT.jar
+    memory: 1024M
+

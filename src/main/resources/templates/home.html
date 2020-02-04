@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>my dashboard</title>
+
+    <link th:href="@{/css/orangeHelvetica.css}" rel="stylesheet">
+    <link th:href="@{/css/orangeIcons.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/boosted.css}" />
+
+</head>
+
+<body>
+<div class="skiplinks">
+    <div class="skiplinks-section sr-only">
+        <ul>
+            <li id="cdu-skiplink">
+            </li>
+            <li>
+                <a href="#search" class="skiplinks-trigger">first section - search</a>
+            </li>
+            <li>
+                <a href="#alerts" class="skiplinks-trigger">second section - alerts</a>
+            </li>
+            <li>
+                <a href="#sysInfo" class="skiplinks-trigger">third section - systems information</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<header role="banner">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-md">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="../../dist/img/orange_logo.svg" alt="Back to homepage" title="Back to homepage" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#orange-navbar-collapse" aria-controls="orange-navbar-collapse"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse justify-content-between collapse" id="orange-navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#" title="open the news menu">dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" title="open the news menu">manage</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" title="open the news menu">parameters</a></li>
+                    <li class="nav-item" id="id-for-cdu-link"></li>
+                </ul>
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</header>
+
+
+<main id="content" class="container-fluid">
+
+    <div class="well">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+
+    <div class="row col-wrap">
+        <div class="col-md-12 col" id="first">
+            <div class="info-block">
+
+                <h1 id="search" class="h2">search</h1>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#quota-enforcer" data-toggle="tab">Quota-enforcer Logs</a></li>
+
+                    <li class="nav-item d-sm-none d-md-flex"><a class="nav-link" href="#configure" data-toggle="tab">Configure</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview">
+                        <table id="news-table" class="table tablesorter">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="header">Instance id
+                                </th>
+                                <th scope="col" class="header">Size
+                                </th>
+                                <th scope="col" class="header">Users
+                                </th>
+                                <th scope="col" class="header">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="db : ${all_databases}">
+                                <td th:text="${db.name}">1</td>
+                                <td><div class="progress"><div th:text="${db.size} + ' / ' + ${planSizeLimit} + ' Mo'" th:class="'progress-bar '+(${db.size}/${planSizeLimit}  > 0.75 ? 'bg-danger')" role="progressbar"  th:style="'width: '+100*${db.size}/${planSizeLimit}+'%'" th:aria-valuenow="${db.size}/${planSizeLimit}" aria-valuemin="0" aria-valuemax="100"></div></div></td>
+
+                                <td>
+
+                                    <a class="btn btn-secondary" data-toggle="collapse" th:href="'#usersTab'+${dbStat.index}" style="width:100%" role="button" aria-expanded="false" th:aria-controls="'usersTab'+${dbStat.index}">
+                                        Users
+                                    </a>
+                                        <div class="collapse" th:id="'usersTab'+${dbStat.index}">
+                                            <div class="card card-body">
+                                            <p th:each="user: ${db.users}" th:text="${user.name} +' - '+${user.role}">User</p>
+                                            </div>
+                                        </div>
+
+
+                                </td>
+
+                                <td>
+                                <div class="btn-group" role="group">
+                                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Permissions
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <a class="dropdown-item" href="#">Read-Only</a>
+                                        <a class="dropdown-item" href="#">Read-Write</a>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-danger" target="_self" data-toggle="modal" data-target="#confirm-dialog">Delete</a>              </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="tab-pane" id="quota-enforcer">
+                        <p th:class="${log.severity} == 'debug' ? text-secondary : text-danger" th:each="log : ${quotaEnforcerLogs}" th:text="${log.date} +' :: '+${log.severity} +' :: '+ ${log.str}"></p>
+                    </div>
+                    <div class="tab-pane" id="service-instances">
+                        <form id="search-messages" name="searchMesages" method="post" action="/" class="form-horizontal">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">@</div>
+                                </div>
+                                <input type="text" class="form-control" placeholder="regexp" title="Found a message by regexp">
+                            </div>
+                            <div class="center">
+                                <button type="submit" class="btn btn-primary">search</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane hide-when-small" id="configure">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="row base col-wrap">
+        <!-- add a second row of wells or rounded corner divs immeadiately underneath - tips to create x same height columns -->
+        <div class="col-md-6 col-base">
+            <div class="info-block"></div>
+        </div>
+        <div class="col-md-6 col-base">
+            <div class="info-block"></div>
+        </div>
+    </div>
+
+
+    </div>
+    <!-- fin de la row globale-->
+</main>
+<!--/.container-->
+
+<footer role="contentinfo">
+    <div class="container-fluid ">
+        <p>
+            <a href="#"><span>contact</span></a>
+            <a href="#" class="float-md-right"><span>help</span></a>
+        </p>
+    </div>
+</footer>
+
+
+<!-- Boosted core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script th:src="@{/js/jquery-slim.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<!-- Include all compiled plugins bootstrap, bootstrap accessibility plugin and boosted specific components (below), or include individual files as needed -->
+<script th:src="@{/js/boosted.js}"></script>
+<script th:src="@{/js/jquery.tablesorter.min.js}"></script>
+
+
+<!-- <script type="text/javascript" src="http://confort-plus.orange.com/js/toolbar-min.js"></script> -->
+</body>
+</html>
+
