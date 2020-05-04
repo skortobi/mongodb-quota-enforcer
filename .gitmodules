@@ -1,0 +1,3 @@
+[submodule "client/uaa-java-client"]
+	path = client/uaa-java-client
+	url = https://github.com/cloudfoundry-incubator/uaa-java-client.git
